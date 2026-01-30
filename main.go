@@ -30,8 +30,13 @@ func main() {
 		_ = viper.ReadInConfig()
 	}
 
+	port := viper.GetString("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	config := Config{
-		Port:   viper.GetString("PORT"),
+		Port:   port,
 		DBConn: viper.GetString("DB_CONN"),
 	}
 
@@ -56,7 +61,8 @@ func main() {
 			"message": "API Running",
 		})
 	})
-	fmt.Println("Server running di localhost:" + config.Port)
+	log.Println("Server running on port", config.Port)
+
 
 	err = http.ListenAndServe(":"+config.Port, nil)
 	if err != nil {
