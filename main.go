@@ -70,14 +70,12 @@ func main() {
 	productService := services.NewProductService(productRepo)
 	productHandler := handlers.NewProductHandler(productService)
 
-	http.HandleFunc("/api/produk", productHandler.HandleProducts)
-	http.HandleFunc("/api/produk/", productHandler.HandleProductByID)
-
-	log.Fatal(http.ListenAndServe(":"+port, enableCORS(http.DefaultServeMux)))
-
+	mux := http.NewServeMux()
+	mux.HandleFunc("/api/produk", productHandler.HandleProducts)
+	mux.HandleFunc("/api/produk/", productHandler.HandleProductByID)
 
 	//localhost:8080/health
-	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{
 			"status":  "OK",
@@ -85,9 +83,10 @@ func main() {
 		})
 	})
 
+	handler := enableCORS(mux)
 	// fmt.Println("Server running di localhost:" + port)
 	log.Println("Server running on port:", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, handler))
 	// err = http.ListenAndServe(":"+port, nil)
 	// if err != nil {
 	// 	fmt.Println("Gagal running server")
