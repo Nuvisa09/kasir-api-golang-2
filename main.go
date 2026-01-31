@@ -74,10 +74,6 @@ func main() {
 	productService := services.NewProductService(productRepo)
 	productHandler := handlers.NewProductHandler(productService)
 
-	// mux := http.NewServeMux()
-	// mux.HandleFunc("/api/produk", productHandler.HandleProducts)
-	// mux.HandleFunc("/api/produk/", productHandler.HandleProductByID)
-
 	r := mux.NewRouter()
 	r.HandleFunc("/api/produk", productHandler.HandleProducts).Methods("GET", "POST")
 	r.HandleFunc("/api/produk/{id}", productHandler.HandleProductByID).Methods("GET", "PUT", "DELETE")
@@ -95,8 +91,4 @@ func main() {
 	// fmt.Println("Server running di localhost:" + port)
 	log.Println("Server running on port:", port)
 	log.Fatal(http.ListenAndServe(":"+port, handler))
-	// err = http.ListenAndServe(":"+port, nil)
-	// if err != nil {
-	// 	fmt.Println("Gagal running server")
-	// }
 }
