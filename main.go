@@ -44,7 +44,8 @@ func main() {
 
 	db, err := database.InitDB(DBConn)
 	if err != nil {
-		log.Fatal("Failed to initialize database:", err)
+		// log.Fatal("Failed to initialize database:", err)
+		log.Println("Failed to initialize database:", err)
 		return
 	}
 	defer db.Close()
@@ -65,10 +66,11 @@ func main() {
 		})
 	})
 
-	fmt.Println("Server running di localhost:" + port)
-
-	err = http.ListenAndServe(":"+port, nil)
-	if err != nil {
-		fmt.Println("Gagal running server")
-	}
+	// fmt.Println("Server running di localhost:" + port)
+	log.Println("Server running on port:", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
+	// err = http.ListenAndServe(":"+port, nil)
+	// if err != nil {
+	// 	fmt.Println("Gagal running server")
+	// }
 }
