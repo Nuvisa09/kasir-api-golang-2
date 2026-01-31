@@ -42,7 +42,7 @@ func (repo *ProductRepository) Create(product *models.Product) error {
 }
 
 func (repo *ProductRepository) GetByID(id int) (*models.Product, error) {
-	query := "SELECT id,name, price, stock FROM products WHERE id = $1"
+	query := "SELECT id, name, price, stock FROM products WHERE id = $1"
 
 	var p models.Product
 	err := repo.db.QueryRow(query, id).Scan(&p.ID, &p.Name, &p.Price, &p.Stock)
