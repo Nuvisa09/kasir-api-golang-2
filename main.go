@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/spf13/viper"
+	"github.com/gorilla/mux"
 )
 
 type Config struct {
@@ -34,7 +35,6 @@ func enableCORS(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
-
 
 func main() {
 
@@ -70,12 +70,16 @@ func main() {
 	productService := services.NewProductService(productRepo)
 	productHandler := handlers.NewProductHandler(productService)
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/api/produk", productHandler.HandleProducts)
-	mux.HandleFunc("/api/produk/", productHandler.HandleProductByID)
+	// mux := http.NewServeMux()
+	// mux.HandleFunc("/api/produk", productHandler.HandleProducts)
+	// mux.HandleFunc("/api/produk/", productHandler.HandleProductByID)
+
+	r := mux.NewRouter()
+	r.HandleFunc("/api/produk", productHandler.HandleProducts).Methods("GET", "POST")
+	r.HandleFunc("/api/produk/{id}", productHandler.HandleProductByID).Methods("GET", "PUT", "DELETE")
 
 	//localhost:8080/health
-	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{
 			"status":  "OK",
@@ -83,7 +87,7 @@ func main() {
 		})
 	})
 
-	handler := enableCORS(mux)
+	handler := enableCORS(r)
 	// fmt.Println("Server running di localhost:" + port)
 	log.Println("Server running on port:", port)
 	log.Fatal(http.ListenAndServe(":"+port, handler))
