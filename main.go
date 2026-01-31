@@ -44,8 +44,8 @@ func main() {
 
 	db, err := database.InitDB(DBConn)
 	if err != nil {
-		// log.Fatal("Failed to initialize database:", err)
-		log.Println("WARNING DB:", err)
+		log.Fatal("Failed to initialize database:", err)
+		return
 	}
 	defer db.Close()
 
