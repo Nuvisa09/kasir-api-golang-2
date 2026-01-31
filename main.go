@@ -30,17 +30,22 @@ func main() {
 		_ = viper.ReadInConfig()
 	}
 
-	config := Config{
-		Port:   viper.GetString("PORT"),
-		DBConn: viper.GetString("DB_CONN"),
+	port := viper.GetString("PORT")
+	if port == "" {
+		port = "8080"
 	}
+	// config := Config{
+	// 	Port:   viper.GetString("PORT"),
+	// 	DBConn: viper.GetString("DB_CONN"),
+	// }
 
-	
-	fmt.Println("DB_CONN =", config.DBConn)
+	DBConn := viper.GetString("DB_CONN")
+	fmt.Println("DB_CONN =", DBConn)
 
-	db, err := database.InitDB(config.DBConn)
+	db, err := database.InitDB(DBConn)
 	if err != nil {
-		log.Fatal("Failed to initialize database:", err)
+		// log.Fatal("Failed to initialize database:", err)
+		log.Println("WARNING DB:", err)
 	}
 	defer db.Close()
 
@@ -60,9 +65,9 @@ func main() {
 		})
 	})
 
-	fmt.Println("Server running di localhost:" + config.Port)
+	fmt.Println("Server running di localhost:" + port)
 
-	err = http.ListenAndServe(":"+config.Port, nil)
+	err = http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		fmt.Println("Gagal running server")
 	}
