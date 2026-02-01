@@ -5,29 +5,29 @@ import (
 	"kasir-api-golang-2/repositories"
 )
 
-type ProductService struct {
-	repo *repositories.ProductRepository
+type CategoryService struct {
+	repo *repositories.CategoryRepository
 }
 
-func NewProductService(repo *repositories.ProductRepository) *ProductService{
-	return &ProductService{repo: repo}
+func NewCategoryService(repo *repositories.CategoryRepository) *CategoryService{
+	return &CategoryService{repo: repo}
 }
 
-func (s *ProductService) GetAll() ([]models.Product, error){
+func (s *CategoryService) GetAll() ([]models.Categories, error){
 	return s.repo.GetAll()
 }
 
-func (s *ProductService) Create(data *models.Product) error {
+func (s *CategoryService) Create(data *models.Categories) error {
 return  s.repo.Create(data)
 }
 
-func (s *ProductService) GetByID(id int) (*models.Product, error){
+func (s *CategoryService) GetByID(id int) (*models.Categories, error){
 return  s.repo.GetByID(id)
 }
 
-func (s *ProductService) Update(product *models.Product) error{
-return  s.repo.Update(product)
+func (s *CategoryService) Update(category *models.Categories) error{
+return  s.repo.Update(category)
 }
-func (s *ProductService) Delete(id int) error {
+func (s *CategoryService) Delete(id int) error {
 return  s.repo.Delete(id)
 }
