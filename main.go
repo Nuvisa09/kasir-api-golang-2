@@ -12,8 +12,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/spf13/viper"
 	"github.com/gorilla/mux"
+	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -70,11 +70,18 @@ func main() {
 	}
 	defer db.Close()
 
-	productRepo := repositories.NewProductRepository(db)
-	productService := services.NewProductService(productRepo)
-	productHandler := handlers.NewProductHandler(productService)
+	categoryRepo := repositories.NewCategoryRepository(db)
+	categoryService := services.NewCategoryService(categoryRepo)
+	categoryHandler := handlers.NewCategoryHandler(categoryService)
 
 	r := mux.NewRouter()
+	r.HandleFunc("/categories", categoryHandler.HandleCategories).Methods("GET", "POST")
+	r.HandleFunc("/categories/{id}", categoryHandler.HandleCategoryByID).Methods("GET", "PUT", "DELETE")
+
+	ProductRepo := repositories.NewProductRepository(db)
+	productService := services.NewProductService(ProductRepo)
+	productHandler := handlers.NewProductHandler(productService)
+
 	r.HandleFunc("/api/produk", productHandler.HandleProducts).Methods("GET", "POST")
 	r.HandleFunc("/api/produk/{id}", productHandler.HandleProductByID).Methods("GET", "PUT", "DELETE")
 
