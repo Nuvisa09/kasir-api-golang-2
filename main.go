@@ -78,6 +78,12 @@ func main() {
 	r.HandleFunc("/api/produk", productHandler.HandleProducts).Methods("GET", "POST")
 	r.HandleFunc("/api/produk/{id}", productHandler.HandleProductByID).Methods("GET", "PUT", "DELETE")
 
+	transactionRepo := repositories.NewTransactionRepository(db)
+	transactionService := services.NewTransactionService(transactionRepo)
+	transactionHandler := handlers.NewTransactionHandler(transactionService)
+
+	r.HandleFunc("/api/checkout", transactionHandler.HandleCheckout).Methods("POST")
+
 	//localhost:8080/health
 	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
