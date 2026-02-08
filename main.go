@@ -84,6 +84,14 @@ func main() {
 
 	r.HandleFunc("/api/checkout", transactionHandler.HandleCheckout).Methods("POST")
 
+
+	reportRepo := repositories.NewReportRepository(db)
+	reportService := services.NewReportService(reportRepo)
+	reportHandler := handlers.NewReportHandler(reportService)
+
+	r.HandleFunc("/api/report", reportHandler.GetReport).Methods("GET")
+	r.HandleFunc("/api/report/today", reportHandler.GetReportToday).Methods("GET")
+
 	//localhost:8080/health
 	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
